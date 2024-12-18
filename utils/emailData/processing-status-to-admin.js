@@ -24,12 +24,12 @@ export const processingStatusToAdmin = (
     to: client,
     cc: admins,
     from: "info@nanaskitchen.com",
-    subject: `Ghana -[Nana's Kitchen]: New order ${sliceOrderId}`,
+    subject: `Ghana-[Nana's Kitchen]: New order ${sliceOrderId}`,
     html: `
     <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; background-color: #f4f4f4;">
       <div style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
         <div style="background-color: #e74c3c; padding: 20px; text-align: center;">
-          <h1 style="color: #fff; margin: 0;">Ghana -New Order :# ${sliceOrderId}</h1>
+          <h1 style="color: #fff; margin: 0;">Ghana-New Order:#${sliceOrderId}</h1>
         </div>
         <div style="padding: 20px;">
           <p style="font-size: 16px; line-height: 1.5;">
