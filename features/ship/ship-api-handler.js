@@ -130,7 +130,24 @@ export const shipmentWebhook = async (req, res) => {
     console.log("Received ShipStation event:", event);
 
     // Process the event (e.g., update order status in your database)
-    handleEvent(event);
+    if (event.resource_type === "SHIP_NOTIFY") {
+      console.log(`Order status updated: ${event.resource_url}`);
+      axios
+        .get(event.resource_url, {
+          headers: {
+            Authorization: `Basic ${auth}`,
+            "Content-Type": "application/json",
+          },
+        })
+        .then(async function (response) {
+          console.log("Order details:", response.data);
+
+          await Order.findByIdAndUpdate(response.data.orderNumber, {
+            status: "completed",
+          });
+        });
+      // Fetch additional details if needed and update the database
+    }
 
     // Respond to ShipStation
     res.status(200).send("Webhook received");
@@ -139,15 +156,6 @@ export const shipmentWebhook = async (req, res) => {
     res.status(500).send("Error processing webhook");
   }
 };
-
-function handleEvent(event) {
-  const { resource_url, event: eventType } = event;
-
-  if (eventType === "ORDER_STATUS_UPDATED") {
-    console.log(`Order status updated: ${resource_url}`);
-    // Fetch additional details if needed and update the database
-  }
-}
 
 // Get all carrier codes
 export const getAllCodes = async (req, res) => {

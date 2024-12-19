@@ -49,7 +49,7 @@ const stripeWebhookHandler = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
     // Send Email
-    order.status = "completed";
+    order.status = "processing";
 
     // Send order to ship stattion
     await createShipOrder(order);
