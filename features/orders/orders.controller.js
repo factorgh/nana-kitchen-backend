@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import Stripe from "stripe";
 import { sendEmail } from "../../utils/email.js";
+import { stripeAdmin } from "../../utils/emailData/completed-status-to-stripe-admin.js";
 import { processingCustomer } from "../../utils/emailData/processing-status-to-customer.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
@@ -9,7 +10,7 @@ dotenv.config({
   path: "./.env",
 });
 
-const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
+const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -65,6 +66,14 @@ const stripeWebhookHandler = async (req, res) => {
       totalItemsCost
     );
     await sendEmail(emailData);
+
+    const admins =
+      "ernest@adroit360.com,info@adroit360.com,mightysuccess55@gmail.com";
+    const main = "ernest@adroit360gh.com";
+
+    await sendEmail(
+      stripeAdmin(main, admins, order, totalItemsCost, shippingDetails)
+    );
 
     await order.save();
   }

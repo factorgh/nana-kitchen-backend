@@ -76,7 +76,7 @@ export const processingStatusToAdmin = (
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Payment method:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">Cash on delivery</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">Paystack</td>
               </tr>
               </tfoot>
           </table>
