@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Buffer } from "buffer";
 import dotenv from "dotenv";
+import ordersModel from "../orders/orders.model.js";
 
 dotenv.config();
 
@@ -129,31 +130,49 @@ export const shipmentWebhook = async (req, res) => {
     const event = req.body;
     console.log("Received ShipStation event:", event);
 
-    // Process the event (e.g., update order status in your database)
+    // Process the event if it's a SHIP_NOTIFY event
     if (event.resource_type === "SHIP_NOTIFY") {
-      console.log(`Order status updated: ${event.resource_url}`);
-      axios
-        .get(event.resource_url, {
+      console.log(`Fetching shipment details from: ${event.resource_url}`);
+
+      try {
+        const response = await axios.get(event.resource_url, {
           headers: {
             Authorization: `Basic ${auth}`,
             "Content-Type": "application/json",
           },
-        })
-        .then(async function (response) {
-          console.log("Order details:", response.data);
-
-          await Order.findByIdAndUpdate(response.data.orderNumber, {
-            status: "completed",
-          });
         });
-      // Fetch additional details if needed and update the database
+
+        const shipments = response.data.shipments;
+
+        if (!Array.isArray(shipments)) {
+          console.error("Expected 'shipments' to be an array.");
+          return res.status(400).send("Invalid shipment data.");
+        }
+
+        for (const shipment of shipments) {
+          if (shipment.orderNumber) {
+            console.log(
+              `Updating order status for orderNumber: ${shipment.orderNumber}`
+            );
+
+            await ordersModel.findByIdAndUpdate(shipment.orderNumber, {
+              status: "completed",
+            });
+          } else {
+            console.warn("Shipment missing orderNumber:", shipment);
+          }
+        }
+      } catch (axiosError) {
+        console.error("Error fetching shipment details:", axiosError.message);
+        return res.status(500).send("Error fetching shipment details.");
+      }
     }
 
-    // Respond to ShipStation
+    // Respond to ShipStation webhook promptly
     res.status(200).send("Webhook received");
   } catch (error) {
-    console.error("Error handling webhook:", error);
-    res.status(500).send("Error processing webhook");
+    console.error("Error handling webhook:", error.message);
+    res.status(500).send("Error processing webhook.");
   }
 };
 
