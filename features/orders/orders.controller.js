@@ -99,8 +99,12 @@ const createStripeCheckout = async (req, res) => {
       userDetails,
     });
 
+    // Calculate shipping cost
+    const shipmentCost =
+      newOrder.totalAmount - calculateTotalAmount(newOrder.cartItems);
+
     // Create line items
-    const lineItems = createLineItems(cartItems);
+    const lineItems = createLineItems(cartItems, shipmentCost);
 
     // Create checkout session
     const sessionData = await createCheckoutSession(
@@ -125,9 +129,9 @@ const createStripeCheckout = async (req, res) => {
 };
 
 // Create line items
-const createLineItems = (cartItems) => {
+const createLineItems = (cartItems, shipmentCost) => {
   try {
-    return cartItems.map((product) => ({
+    const lineItems = cartItems.map((product) => ({
       price_data: {
         currency: "usd",
         product_data: {
@@ -137,6 +141,22 @@ const createLineItems = (cartItems) => {
       },
       quantity: product.quantity,
     }));
+
+    // Add shipment cost as a separate line item
+    if (shipmentCost) {
+      lineItems.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "Shipping Cost",
+          },
+          unit_amount: Math.round(shipmentCost * 100), // Convert to cents
+        },
+        quantity: 1,
+      });
+    }
+
+    return lineItems;
   } catch (error) {
     console.error("Error in createLineItems:", error);
     throw new Error("Failed to create line items.");
