@@ -72,6 +72,7 @@ export const verifyPayment = async (req, res) => {
     if (response.data.status !== "success") {
       return res.status(400).json({ error: "Payment verification failed" });
     }
+    console.log(orderId);
 
     // Step 2: Update order status
     const order = await ordersModel.findByIdAndUpdate(
