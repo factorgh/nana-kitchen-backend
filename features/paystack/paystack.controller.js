@@ -63,6 +63,9 @@ export const verifyPayment = async (req, res) => {
 
   const { reference, orderId } = req.body;
 
+  console.log("-------------------------------reference", reference);
+  console.log("-------------------------------orderId", orderId);
+
   if (!reference || !orderId) {
     return res.status(400).json({ error: "Missing reference or orderId" });
   }
