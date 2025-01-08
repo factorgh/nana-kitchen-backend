@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     country: { type: String, required: true },
     state: { type: String, required: true },
-    zip: { type: String, required: true },
+    zip: { type: String },
     location: {
       type: String,
       required: true,
