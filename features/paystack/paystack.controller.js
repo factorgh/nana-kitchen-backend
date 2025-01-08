@@ -70,10 +70,18 @@ export const verifyPayment = async (req, res) => {
   try {
     // Step 1: Verify payment with Paystack
     const response = await paystack.transaction.verify(reference);
-
+    console.log(
+      1,
+      "--------------------------------------------------------------"
+    );
+    console.log(response);
     if (response.data.status !== "success") {
       return res.status(400).json({ error: "Payment verification failed" });
     }
+    console.log(
+      2,
+      "--------------------------------------------------------------"
+    );
     console.log(orderId);
 
     // Step 2: Update order status
@@ -82,6 +90,7 @@ export const verifyPayment = async (req, res) => {
       { status: "completed" },
       { new: true }
     );
+    console.log(order);
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
