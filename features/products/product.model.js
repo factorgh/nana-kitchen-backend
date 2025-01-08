@@ -17,11 +17,6 @@ const productSchema = mongoose.Schema({
     enum: ["USA", "Canada", "UK", "Australia", "Ghana"],
     required: true,
   },
-  //   currency: {
-  //     type: String,
-  //     enum: ["USD", "CAD", "GBP", "AUD", "GHS"],
-  //     required: true,
-  //   },
 
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
