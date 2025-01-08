@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import Stripe from "stripe";
 import { sendEmail } from "../../utils/email.js";
 import { stripeAdmin } from "../../utils/emailData/completed-status-to-stripe-admin.js";
-import { processingCustomer } from "../../utils/emailData/processing-status-to-customer.js";
+import { processingCustomerStripe } from "../../utils/emailData/processing-status-to-customer-stripe.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
 
@@ -60,7 +60,7 @@ const stripeWebhookHandler = async (req, res) => {
 
     const totalItemsCost = order.totalAmount;
     // Create checkout session
-    const emailData = processingCustomer(
+    const emailData = processingCustomerStripe(
       order,
       shippingDetails,
       totalItemsCost
@@ -187,12 +187,16 @@ const createCheckoutSession = async (lineItems, orderId) => {
 // Get all orders
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await ordersModel.find();
+    // Retrieve all orders, sorted by createdAt in descending order
+    const orders = await ordersModel.find().sort({ createdAt: -1 });
 
-    if (!orders) {
+    // Check if no orders exist
+    if (orders.length === 0) {
       return res.status(404).json({ message: "No orders found." });
     }
-    res.status(200).send(orders);
+
+    // Send the retrieved orders
+    res.status(200).json(orders);
   } catch (error) {
     console.error("Error in getAllOrders:", error);
     res.status(500).json({ error: "Failed to retrieve orders." });

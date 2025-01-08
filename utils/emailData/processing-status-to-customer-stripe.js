@@ -1,4 +1,8 @@
-export const processingCustomer = (order, shippingDetails, totalItemsCost) => {
+export const processingCustomerStripe = (
+  order,
+  shippingDetails,
+  totalItemsCost
+) => {
   // calculate subtotal
   const subtotal = order.cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -82,9 +86,7 @@ export const processingCustomer = (order, shippingDetails, totalItemsCost) => {
       order.userDetails.lastName
     }</p>
           <p><strong>Address:</strong> ${order.userDetails.address}</p>
-          <p><strong>Delivery Date:</strong> ${
-            order.deliveryDate || "Not specified"
-          }</p>
+         
         </div>
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center;">
           <p style="font-size: 14px; color: #7f8c8d; margin: 0;">&copy; 2024 Nana's Kitchen. All rights reserved.</p>

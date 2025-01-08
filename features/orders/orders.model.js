@@ -23,6 +23,10 @@ const orderSchema = new mongoose.Schema({
     country: { type: String, required: true },
     state: { type: String, required: true },
     zip: { type: String, required: true },
+    location: {
+      type: String,
+      required: true,
+    },
   },
   status: {
     type: String,

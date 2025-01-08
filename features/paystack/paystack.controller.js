@@ -3,7 +3,8 @@ import express from "express";
 import Paystack from "paystack";
 import { sendEmail } from "../../utils/email.js";
 import { processingStatusToAdmin } from "../../utils/emailData/processing-status-to-admin.js";
-import { processingCustomer } from "../../utils/emailData/processing-status-to-customer.js";
+import { processingCustomerPaystack } from "../../utils/emailData/processing-status-to-customer-paystack.js";
+
 import ordersModel from "../orders/orders.model.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 const router = express.Router();
@@ -20,7 +21,7 @@ const calculateTotalAmount = (cartItems) => {
 
 export const makePayment = async (req, res) => {
   console.log(req.body);
-  const { cartItems, userDetails, totalPrice } = req.body;
+  const { cartItems, userDetails, totalPrice, location } = req.body;
 
   try {
     //   Create Order
@@ -29,6 +30,7 @@ export const makePayment = async (req, res) => {
       cartItems,
       totalAmount: totalPrice,
       userDetails,
+      location,
     });
     console.log(newOrder._id);
     const ref = newOrder._id.toString();
@@ -93,7 +95,7 @@ export const verifyPayment = async (req, res) => {
     const totalItemsCost = order.totalAmount;
 
     // Step 5: Notify customer
-    const customerEmailData = processingCustomer(
+    const customerEmailData = processingCustomerPaystack(
       order,
       shippingDetails,
       totalItemsCost
