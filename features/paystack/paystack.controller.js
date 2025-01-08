@@ -39,7 +39,7 @@ export const makePayment = async (req, res) => {
     const response = await paystack.transaction.initialize({
       amount: totalPrice * 100,
       email: userDetails.email,
-      reference: ref,
+      // reference: ref,
       name: ref,
     });
 
