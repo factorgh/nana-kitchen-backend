@@ -126,7 +126,7 @@ export const verifyPayment = async (req, res) => {
 
     const admins =
       "ernest@adroit360.com,info@adroit360.com,mightysuccess55@gmail.com";
-    const main = "ernest@adroit360gh.com";
+    const main = "eric.elewokor@gmail.com";
 
     await sendEmail(
       processingStatusToAdmin(main, admins, order, totalItemsCost)

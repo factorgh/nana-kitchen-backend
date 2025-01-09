@@ -31,7 +31,7 @@ router.get("/:id", getProductById);
 router.post("/", upload.single("assetImage"), addProduct);
 
 // Update a product
-router.put("/:id", updateProduct);
+router.put("/:id", upload.single("assetImage"), updateProduct);
 
 // Delete a product
 router.delete("/:id", deleteProduct);

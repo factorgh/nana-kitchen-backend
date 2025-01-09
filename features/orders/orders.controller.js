@@ -68,8 +68,8 @@ const stripeWebhookHandler = async (req, res) => {
     await sendEmail(emailData);
 
     const admins =
-      "ernest@adroit360.com,info@adroit360.com,mightysuccess55@gmail.com";
-    const main = "ernest@adroit360gh.com";
+      "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
+    const main = "eric.elewokor@gmail.com";
 
     await sendEmail(
       stripeAdmin(main, admins, order, totalItemsCost, shippingDetails)

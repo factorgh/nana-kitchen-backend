@@ -62,22 +62,43 @@ export const updateProduct = async (req, res, next) => {
   const { id: productId } = req.params;
 
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      productId,
-      req.body,
-      { new: true }
-    );
+    // Find the existing product
+    const existingProduct = await Product.findById(productId);
 
-    if (!updatedProduct) {
+    if (!existingProduct) {
       return res.status(404).json({ error: "Product not found." });
     }
 
-    res.send(updatedProduct);
+    let updatedData = { ...req.body };
+
+    // Check if a new file is attached
+    if (req.file) {
+      // Upload the new image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "products",
+      });
+
+      // Update the image URL
+      updatedData.image = result.secure_url;
+    }
+
+    // Update product with the new or unchanged data
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updatedData,
+      { new: true } // Return the updated product
+    );
+
+    res.status(200).json({
+      message: "Product updated successfully.",
+      product: updatedProduct,
+    });
   } catch (error) {
     console.error("Error in updateProduct:", error);
     res.status(500).json({ error: "Failed to update product." });
   }
 };
+
 // Delete product
 
 export const deleteProduct = async (req, res, next) => {
