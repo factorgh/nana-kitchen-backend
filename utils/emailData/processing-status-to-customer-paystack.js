@@ -70,7 +70,7 @@ export const processingCustomerPaystack = (
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${subtotal}</td>
               </tr>
               <tr>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Shipping:</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Delivery:</td>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${shippingDetails}</td>
               </tr>
               <tr>

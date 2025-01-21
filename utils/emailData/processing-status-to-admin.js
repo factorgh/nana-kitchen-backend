@@ -11,12 +11,15 @@ export const processingStatusToAdmin = (
     (total, item) => total + item.price * item.quantity,
     0
   );
+
   // generate order details
   const orderDetails = order.cartItems.map((item) => ({
     title: item.title,
     price: item.price,
     quantity: item.quantity,
   }));
+
+  const calculatedDelveryPrice = order.totalAmount - subtotal;
 
   const sliceOrderId = order._id.toString().slice(-6);
 
@@ -73,6 +76,16 @@ export const processingStatusToAdmin = (
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Subtotal:</td>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC ${subtotal}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Delivery Fee:</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC ${calculatedDelveryPrice}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Subtotal:</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC ${
+                  order.totalAmount
+                }</td>
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Payment method:</td>
