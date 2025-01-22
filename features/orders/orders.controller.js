@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { sendEmail } from "../../utils/email.js";
 import { stripeAdmin } from "../../utils/emailData/completed-status-to-stripe-admin.js";
 import { processingCustomerStripe } from "../../utils/emailData/processing-status-to-customer-stripe.js";
+import { notifyAdmins } from "../../utils/notfi-orders.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
 
@@ -99,6 +100,8 @@ const createStripeCheckout = async (req, res) => {
       userDetails,
     });
 
+    // Notifiy admins
+    await notifyAdmins(newOrder);
     // Calculate shipping cost
     const shipmentCost =
       newOrder.totalAmount - calculateTotalAmount(newOrder.cartItems);

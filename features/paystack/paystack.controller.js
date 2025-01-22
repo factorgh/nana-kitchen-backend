@@ -5,6 +5,7 @@ import { sendEmail } from "../../utils/email.js";
 import { processingStatusToAdmin } from "../../utils/emailData/processing-status-to-admin.js";
 import { processingCustomerPaystack } from "../../utils/emailData/processing-status-to-customer-paystack.js";
 
+import { notifyAdmins } from "../../utils/notfi-orders.js";
 import ordersModel from "../orders/orders.model.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 const router = express.Router();
@@ -98,6 +99,7 @@ export const verifyPayment = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
+    await notifyAdmins(order);
     // // Step 3: Process shipping
     // await createShipOrder(order);
 
