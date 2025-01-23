@@ -5,6 +5,7 @@ import morgan from "morgan";
 import orderRoute from "./features/orders/orders.route.js";
 import paystackRoute from "./features/paystack/paystack.route.js";
 import productRoute from "./features/products/product.route.js";
+import reviewRoute from "./features/Reviews/review.route.js";
 import notiRouter from "./utils/notification.js";
 
 // Env setup
@@ -59,6 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/noti", notiRouter);
+app.use("/api/v1/reviews", reviewRoute);
 
 // PAYSTACK
 app.use("/api/v1/paystack", paystackRoute);

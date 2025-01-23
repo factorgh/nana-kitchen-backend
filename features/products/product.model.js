@@ -12,6 +12,7 @@ const productSchema = mongoose.Schema({
   height: { type: Number, required: true },
   width: { type: Number, required: true },
   weight: { type: Number, required: true },
+  reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
   country: {
     type: String,
     enum: ["USA", "Canada", "UK", "Australia", "Ghana"],
