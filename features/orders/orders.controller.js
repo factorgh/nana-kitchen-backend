@@ -6,6 +6,7 @@ import { processingCustomerStripe } from "../../utils/emailData/processing-statu
 import { notifyAdmins } from "../../utils/notfi-orders.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
+import mongoose from "mongoose";
 
 dotenv.config({
   path: "./.env",
@@ -206,8 +207,32 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+export const updateOrderStatus = async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body; // Extract only status
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    return res.status(400).json({ error: "Invalid order Id" });
+  }
+
+  ordersModel
+    .findByIdAndUpdate(orderId, { status }, { new: true })
+    .then((updatedOrder) => {
+      if (!updatedOrder) {
+        return res.status(404).json({ error: "Order not found." });
+      }
+      res.json(updatedOrder);
+    })
+    .catch((error) => {
+      console.error("Error in updateReviewStatus:", error);
+      res.status(500).json({ error: "Internal Server Error" }); // Send proper error response
+    });
+};
+
 export default {
   createStripeCheckout,
   stripeWebhookHandler,
   getAllOrders,
+  updateOrderStatus,
 };
