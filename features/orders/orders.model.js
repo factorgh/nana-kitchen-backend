@@ -18,10 +18,10 @@ const orderSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true },
-    address: { type: String, required: true },
-    phone: { type: String, required: true },
+    address: { type: String },
+    phone: { type: String },
     country: { type: String, required: true },
-    state: { type: String, required: true },
+    state: { type: String },
     zip: { type: String },
     location: {
       type: String,
@@ -30,11 +30,15 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["processing", "completed", "delivered"],
-    default: "processing",
+    enum: ["processing", "completed", "delivered", "awaiting_payment"],
+    default: "awaiting_payment",
   },
   country: { type: String },
   ref: { type: String },
+  deletedMode: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

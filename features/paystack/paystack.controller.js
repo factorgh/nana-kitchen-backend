@@ -7,7 +7,6 @@ import { processingCustomerPaystack } from "../../utils/emailData/processing-sta
 
 import { notifyAdmins } from "../../utils/notfi-orders.js";
 import ordersModel from "../orders/orders.model.js";
-import { createShipOrder } from "../ship/ship-api-handler.js";
 const router = express.Router();
 
 // Initialize Paystack with your secret key
@@ -150,61 +149,67 @@ export const verifyPayment = async (req, res) => {
 };
 // Paystack webhook
 export const createWebhook = async (req, res) => {
-  // Logging paystack webhook event
-  const event = req.body;
+  try {
+    // Parse Paystack webhook event
+    const event = req.body;
 
-  // Verify event signature (important for security)
-  const paystackSignature = req.headers["x-paystack-signature"];
-  if (!verifyPaystackSignature(paystackSignature, event)) {
-    return res.status(400).json({ error: "Invalid Paystack signature" });
-  }
+    // Verify event signature (important for security)
+    const paystackSignature = req.headers["x-paystack-signature"];
+    if (!verifyPaystackSignature(paystackSignature, event)) {
+      return res.status(400).json({ error: "Invalid Paystack signature" });
+    }
 
-  // Handle the event (payment successful, etc.)
-  if (event.event === "charge.success") {
-    const data = event.data;
-    console.log("Payment success:", data);
+    console.log("Received Paystack event:", event.event);
 
-    if (event.type === "checkout.session.completed") {
-      const order = await ordersModel.findById(
-        event.data.object.metadata?.orderId
-      );
+    // Handle successful payment
+    if (event.event === "charge.success") {
+      const data = event.data;
+      console.log("Payment success:", data);
 
+      // Get order ID from metadata
+      const orderId = data.metadata?.orderId;
+      if (!orderId) {
+        return res
+          .status(400)
+          .json({ message: "Order ID not found in metadata" });
+      }
+
+      const order = await ordersModel.findById(orderId);
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
       }
-      // Send Email
+
+      // Mark order as completed
       order.status = "completed";
 
-      // Send order to ship stattion
-      await createShipOrder(order);
+      // Calculate shipping details and total cost
+      const totalItemsCost = calculateTotalAmount(order.cartItems);
+      const shippingDetails = order.totalAmount - totalItemsCost;
 
-      const shippingDetails =
-        order.totalAmount - calculateTotalAmount(order.cartItems);
-
-      const totalItemsCost = order.totalAmount;
-      // Create checkout session
+      // Prepare and send email
       const emailData = processingCustomerPaystack(
         order,
         shippingDetails,
         totalItemsCost
       );
-      // Send Email to user
       await sendEmail(emailData);
 
-      // Send Email to admins
-
+      // Save updated order
       await order.save();
+      console.log("Order updated successfully");
     }
 
-    // You can update your database or perform further logic here
+    // Respond to Paystack
+    res.status(200).send("Event processed successfully");
+  } catch (error) {
+    console.error("Error processing webhook:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  // Respond back with 200 OK
-  res.status(200).send("Event processed");
 };
 
+// Function to verify Paystack signature
 function verifyPaystackSignature(signature, body) {
-  const secretKey = process.env.PAYSTACK_SECRET_KEY; // Your Paystack secret key
+  const secretKey = process.env.PAYSTACK_SECRET_KEY; // Ensure this is set in your .env file
   const hash = crypto
     .createHmac("sha512", secretKey)
     .update(JSON.stringify(body))

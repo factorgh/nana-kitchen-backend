@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import Stripe from "stripe";
 import { sendEmail } from "../../utils/email.js";
 import { stripeAdmin } from "../../utils/emailData/completed-status-to-stripe-admin.js";
@@ -6,7 +7,6 @@ import { processingCustomerStripe } from "../../utils/emailData/processing-statu
 import { notifyAdmins } from "../../utils/notfi-orders.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
-import mongoose from "mongoose";
 
 dotenv.config({
   path: "./.env",
@@ -189,21 +189,24 @@ const createCheckoutSession = async (lineItems, orderId) => {
 };
 
 // Get all orders
+// Ensure correct import
+
 export const getAllOrders = async (req, res) => {
   try {
-    // Retrieve all orders, sorted by createdAt in descending order
-    const orders = await ordersModel.find().sort({ createdAt: -1 });
+    // Retrieve all non-deleted orders, sorted by createdAt in descending order
+    const orders = await ordersModel
+      .find({
+        $or: [{ deletedMode: false }, { deletedMode: { $exists: false } }],
+      })
+      .sort({ createdAt: -1 });
 
-    // Check if no orders exist
-    if (orders.length === 0) {
-      return res.status(404).json({ message: "No orders found." });
-    }
-
-    // Send the retrieved orders
-    res.status(200).json(orders);
+    // Send the retrieved orders (even if empty)
+    res.status(200).json({ success: true, data: orders });
   } catch (error) {
     console.error("Error in getAllOrders:", error);
-    res.status(500).json({ error: "Failed to retrieve orders." });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to retrieve orders." });
   }
 };
 
@@ -230,9 +233,43 @@ export const updateOrderStatus = async (req, res) => {
     });
 };
 
+export const deleteOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(orderId)) {
+    return res.status(400).json({ error: "Invalid order ID" });
+  }
+
+  try {
+    // Update the order to mark it as deleted
+    const order = await ordersModel.findByIdAndUpdate(
+      orderId,
+      { deletedMode: true },
+      { new: true } // Ensures the updated document is returned
+    );
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found." });
+    }
+
+    res.json({ message: "Order deleted successfully.", order });
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+export const getAllOrdersDeleted = (req, res) => {
+  ordersModel.find({ deletedMode: true }).then((orders) => {
+    res.json(orders);
+  });
+};
+
 export default {
   createStripeCheckout,
   stripeWebhookHandler,
   getAllOrders,
   updateOrderStatus,
+  deleteOrder,
+  getAllOrdersDeleted,
 };
