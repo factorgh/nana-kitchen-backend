@@ -265,6 +265,24 @@ export const getAllOrdersDeleted = (req, res) => {
   });
 };
 
+const massDelete = async (req, res) => {
+  try {
+    const result = await ordersModel.deleteMany({ deletedMode: true });
+
+    console.log(result);
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No orders found to delete" });
+    }
+
+    res.json({
+      message: `Successfully deleted ${result.deletedCount} orders`,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting orders", error });
+  }
+};
+
 export default {
   createStripeCheckout,
   stripeWebhookHandler,
@@ -272,4 +290,5 @@ export default {
   updateOrderStatus,
   deleteOrder,
   getAllOrdersDeleted,
+  massDelete,
 };

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/", orders.getAllOrders);
 router.get("/trash", orders.getAllOrdersDeleted);
+router.delete("/mass-delete", orders.massDelete);
 router.post("/checkout/create-checkout-session", orders.createStripeCheckout);
 router.post("/checkout/webhook", orders.stripeWebhookHandler);
 router.put("/:orderId", orders.updateOrderStatus);
