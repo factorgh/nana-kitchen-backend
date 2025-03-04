@@ -101,6 +101,8 @@ export const processingStatusToAdmin = (
     }</p>
           <p><strong>Phone:</strong> ${order.userDetails.phone}</p>
           <p><strong>Address:</strong> ${order.userDetails.address}</p>
+          <p><strong>Google Map Link</strong> ${order.userDetails.location}</p>
+
           
         </div>
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center;">

@@ -108,30 +108,22 @@ export const verifyPayment = async (req, res) => {
     const totalItemsCost = order.totalAmount;
 
     // Step 5: Notify customer
-    const customerEmailData = processingCustomerPaystack(
+    const customerEmailData = `processingCustomerPaystack`(
       order,
       shippingDetails,
       totalItemsCost
     );
     await sendEmail(customerEmailData);
 
-    // Step 6: Notify admins
-    // const admins = [
-    //   // "lisawokor79@yahoo.com",
-    //   // "eelewokor@voltican.com",
-    //   // "soniaboateng17@gmail.com",
-    //   // "ernestaryee11@gmail.com",
-    //   "ernest@adroit360gh.com",
-
-    // ];
-
     const admins =
       "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
     const main = "eric.elewokor@gmail.com";
 
-    console.log(
-      "---------------------------Order Details sent --------------------"
-    );
+    // const main = "abdulaziz021099@gmail.com";
+    // const admins = "abdulazi6960@gmail.com,burchellsbale@gmail.com";
+    // console.log(
+    //   "---------------------------Order Details sent --------------------"
+    // );
     console.log(order);
     await sendEmail(
       processingStatusToAdmin(main, admins, order, totalItemsCost)
@@ -181,13 +173,19 @@ export const createWebhook = async (req, res) => {
 
       // Mark order as completed
       order.status = "completed";
+      order.userDetails.phone = `(${order.userDetails.phone} / ${data.customer.phone})`;
+
+      console.log(
+        "Updating order status to completed",
+        order.userDetails.phone
+      );
 
       // Calculate shipping details and total cost
       const totalItemsCost = calculateTotalAmount(order.cartItems);
       const shippingDetails = order.totalAmount - totalItemsCost;
 
       // Prepare and send email
-      const emailData = processingCustomerPaystack(
+      const emailData = `processingCustomerPaystack`(
         order,
         shippingDetails,
         totalItemsCost
