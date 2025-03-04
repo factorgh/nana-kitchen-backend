@@ -118,15 +118,15 @@ export const verifyPayment = async (req, res) => {
     );
     await sendEmail(customerEmailData);
 
-    // const admins =
-    //   "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
-    // const main = "eric.elewokor@gmail.com";
+    const admins =
+      "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
+    const main = "eric.elewokor@gmail.com";
 
-    const main = "abdulaziz021099@gmail.com";
-    const admins = "abdulazi6960@gmail.com,burchellsbale@gmail.com";
-    console.log(
-      "---------------------------Order Details sent --------------------"
-    );
+    // const main = "abdulaziz021099@gmail.com";
+    // const admins = "abdulazi6960@gmail.com,burchellsbale@gmail.com";
+    // console.log(
+    //   "---------------------------Order Details sent --------------------"
+    // );
     console.log(order);
     await sendEmail(
       processingStatusToAdmin(main, admins, order, totalItemsCost)
