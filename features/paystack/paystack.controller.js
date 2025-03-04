@@ -93,14 +93,17 @@ export const verifyPayment = async (req, res) => {
       { status: "completed" },
       { new: true }
     );
+
+    order.userDetails.phone = `(${order.userDetails.phone} / ${
+      response.data?.customer.phone || ""
+    })`;
+
     console.log(order);
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
 
     await notifyAdmins(order);
-    // // Step 3: Process shipping
-    // await createShipOrder(order);
 
     // Step 4: Calculate shipping and item costs
     const shippingDetails =
@@ -108,22 +111,22 @@ export const verifyPayment = async (req, res) => {
     const totalItemsCost = order.totalAmount;
 
     // Step 5: Notify customer
-    const customerEmailData = `processingCustomerPaystack`(
+    const customerEmailData = processingCustomerPaystack(
       order,
       shippingDetails,
       totalItemsCost
     );
     await sendEmail(customerEmailData);
 
-    const admins =
-      "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
-    const main = "eric.elewokor@gmail.com";
+    // const admins =
+    //   "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
+    // const main = "eric.elewokor@gmail.com";
 
-    // const main = "abdulaziz021099@gmail.com";
-    // const admins = "abdulazi6960@gmail.com,burchellsbale@gmail.com";
-    // console.log(
-    //   "---------------------------Order Details sent --------------------"
-    // );
+    const main = "abdulaziz021099@gmail.com";
+    const admins = "abdulazi6960@gmail.com,burchellsbale@gmail.com";
+    console.log(
+      "---------------------------Order Details sent --------------------"
+    );
     console.log(order);
     await sendEmail(
       processingStatusToAdmin(main, admins, order, totalItemsCost)
@@ -173,7 +176,9 @@ export const createWebhook = async (req, res) => {
 
       // Mark order as completed
       order.status = "completed";
-      order.userDetails.phone = `(${order.userDetails.phone} / ${data.customer.phone})`;
+      order.userDetails.phone = `(${order.userDetails.phone} / ${
+        data.customer.phone || ""
+      })`;
 
       console.log(
         "Updating order status to completed",
@@ -185,7 +190,7 @@ export const createWebhook = async (req, res) => {
       const shippingDetails = order.totalAmount - totalItemsCost;
 
       // Prepare and send email
-      const emailData = `processingCustomerPaystack`(
+      const emailData = processingCustomerPaystack(
         order,
         shippingDetails,
         totalItemsCost
