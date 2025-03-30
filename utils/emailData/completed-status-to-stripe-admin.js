@@ -93,9 +93,9 @@ export const stripeAdmin = (
     }</p>
               <p><strong>Phone:</strong> ${order.userDetails.phone}</p>
               <p><strong>Address:</strong> ${order.userDetails.address}</p>
-              <p><strong>Delivery Date:</strong> ${
-                order.deliveryDate || "Not specified"
-              }</p>
+              <p><strong>State:</strong> ${order.userDetails.state}</p>
+              <p><strong>City:</strong> ${order.userDetails.city}</p>
+            
             </div>
             <div style="background-color: #f9f9f9; padding: 20px; text-align: center;">
               <p style="font-size: 14px; color: #7f8c8d; margin: 0;">&copy; 2024 Nana's Kitchen. All rights reserved.</p>

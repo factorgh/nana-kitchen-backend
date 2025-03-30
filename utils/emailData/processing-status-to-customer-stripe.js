@@ -86,7 +86,7 @@ export const processingCustomerStripe = (
       order.userDetails.lastName
     }</p>
           <p><strong>Address:</strong> ${order.userDetails.address}</p>
-          <p> <strong>Location:</strong> ${order.userDetails.location}</
+          <p> <strong>City:</strong> ${order.userDetails.city}</p>
          
         </div>
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center;">

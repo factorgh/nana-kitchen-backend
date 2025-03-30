@@ -147,14 +147,14 @@ const createLineItems = (cartItems, shipmentCost) => {
     }));
 
     // Add shipment cost as a separate line item
-    if (shipmentCost) {
+    if (shipmentCost && shipmentCost > 0) {
       lineItems.push({
         price_data: {
           currency: "usd",
           product_data: {
             name: "Shipping Cost",
           },
-          unit_amount: Math.round(shipmentCost * 100), // Convert to cents
+          unit_amount: Math.round(Math.abs(shipmentCost) * 100), // Ensure it's positive
         },
         quantity: 1,
       });
@@ -170,14 +170,14 @@ const createLineItems = (cartItems, shipmentCost) => {
 // Create checkout session
 const createCheckoutSession = async (lineItems, orderId) => {
   console.log("Creating checkout session for order:", orderId);
+  console.log("Line items:", JSON.stringify(lineItems, null, 2)); // Log the line items
+
   try {
     const session = await STRIPE.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      metadata: {
-        orderId,
-      },
+      metadata: { orderId },
       success_url: `${URL}/success`,
       cancel_url: `${URL}/checkout`,
     });
