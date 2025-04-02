@@ -12,7 +12,7 @@ dotenv.config({
   path: "./.env",
 });
 
-const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
+const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 // const STRIPE_ENDPOINT_SECRET =
