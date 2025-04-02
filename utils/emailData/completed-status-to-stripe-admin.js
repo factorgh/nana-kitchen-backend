@@ -1,3 +1,4 @@
+import moment from "moment";
 export const stripeAdmin = (
   client,
   admins,
@@ -58,7 +59,7 @@ export const stripeAdmin = (
                       <td style="text-align: center; padding: 10px; border: 1px solid #ddd;">${
                         item.quantity
                       }</td>
-                      <td style="text-align: right; padding: 10px; border: 1px solid #ddd;">GHC${(
+                      <td style="text-align: right; padding: 10px; border: 1px solid #ddd;">$${(
                         item.price * item.quantity
                       ).toFixed(2)}</td>
                     </tr>
@@ -69,7 +70,7 @@ export const stripeAdmin = (
                 <tfoot>
                   <tr>
                     <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Subtotal:</td>
-                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC ${subtotal}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$ ${subtotal}</td>
                   </tr>
                     <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Shipping:</td>

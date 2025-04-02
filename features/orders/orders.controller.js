@@ -12,9 +12,11 @@ dotenv.config({
   path: "./.env",
 });
 
-const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY);
+const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
 
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+// const STRIPE_ENDPOINT_SECRET =
+//   "whsec_2659890a063d46e3d08b474fddc6c89960e65a4bac35879befb917565bd307ec";
 
 const URL = process.env.FRONTEND_URL || "http://localhost:5173";
 // https://nanas-kitchen.vercel.app/
@@ -43,6 +45,8 @@ const stripeWebhookHandler = async (req, res) => {
     return res.status(400).send(`Webhook error: ${error.message}`);
   }
 
+  // Webhooks checker sesssion
+  console.log("web hookks runned");
   if (event.type === "checkout.session.completed") {
     const order = await ordersModel.findById(
       event.data.object.metadata?.orderId
@@ -52,7 +56,7 @@ const stripeWebhookHandler = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
     // Send Email
-    order.status = "processing";
+    order.status = "completed";
 
     // Send order to ship stattion
     await createShipOrder(order);

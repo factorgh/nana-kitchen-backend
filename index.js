@@ -36,19 +36,20 @@ app.use((req, res, next) => {
 
 // Middleware to parse JSON request bodies
 app.use(cors());
-app.use(
-  "/api/v1/orders/checkout/webhook",
-  express.raw({ type: "application/json" })
-);
+// app.use(
+//   "/api/v1/orders/checkout/webhook",
+//   express.raw({ type: "application/json" })
+// );
 
 app.use(helmet());
 app.use(morgan("dev"));
 // Middleware for Stripe webhook (raw body)
-app.use(
-  "/api/v1/orders/checkout/webhook",
-  bodyParser.raw({ type: "application/json" })
-);
+// app.use(
+//   "/api/v1/orders/checkout/webhook",
+//   bodyParser.raw({ type: "application/json" })
+// );
 
+app.use("/api/v1/orders/checkout/webhook", express.raw({ type: "*/*" }));
 // Middleware for parsing JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
