@@ -214,27 +214,52 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+const { sendEmail } = require("../utils/emailService"); // import your email utility
+const mongoose = require("mongoose");
+const ordersModel = require("../models/orderModel");
+
 export const updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
-  const { status } = req.body; // Extract only status
+  const { status } = req.body;
 
   // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(orderId)) {
     return res.status(400).json({ error: "Invalid order Id" });
   }
 
-  ordersModel
-    .findByIdAndUpdate(orderId, { status }, { new: true })
-    .then((updatedOrder) => {
-      if (!updatedOrder) {
-        return res.status(404).json({ error: "Order not found." });
-      }
-      res.json(updatedOrder);
-    })
-    .catch((error) => {
-      console.error("Error in updateReviewStatus:", error);
-      res.status(500).json({ error: "Internal Server Error" }); // Send proper error response
-    });
+  try {
+    const updatedOrder = await ordersModel.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ error: "Order not found." });
+    }
+
+    // If status is 'completed', send an email
+    if (status.toLowerCase() === "completed") {
+      const shippingDetails =
+        updatedOrder.totalAmount - calculateTotalAmount(updatedOrder.cartItems);
+
+      const totalItemsCost = updatedOrder.totalAmount;
+      // Create checkout session
+
+      const admins =
+        "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
+      const main = "eric.elewokor@gmail.com";
+
+      await sendEmail(
+        stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
+      );
+    }
+
+    res.json(updatedOrder);
+  } catch (error) {
+    console.error("Error in updateOrderStatus:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 export const deleteOrder = async (req, res) => {
