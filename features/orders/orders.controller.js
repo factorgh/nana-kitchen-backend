@@ -214,10 +214,6 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-const { sendEmail } = require("../utils/emailService"); // import your email utility
-const mongoose = require("mongoose");
-const ordersModel = require("../models/orderModel");
-
 export const updateOrderStatus = async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
