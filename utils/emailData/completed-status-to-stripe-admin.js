@@ -70,7 +70,9 @@ export const stripeAdmin = (
                 <tfoot>
                   <tr>
                     <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Subtotal:</td>
-                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$ ${subtotal}</td>
+                    <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${subtotal.toFixed(
+                      2
+                    )}</td>
                   </tr>
                     <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Shipping:</td>
@@ -78,7 +80,9 @@ export const stripeAdmin = (
               </tr>
                <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Total:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${totalItemsCost}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${totalItemsCost.toFixed(
+                  2
+                )}</td>
               </tr>
                   <tr>
                     <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Payment method:</td>
