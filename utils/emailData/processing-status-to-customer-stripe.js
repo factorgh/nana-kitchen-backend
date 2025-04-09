@@ -93,6 +93,8 @@ export const processingCustomerStripe = (
     }</p>
           <p><strong>Address:</strong> ${order.userDetails.address}</p>
           <p> <strong>City:</strong> ${order.userDetails.city}</p>
+          <p> <strong>Zip:</strong> ${order.userDetails.zip}</p>
+          
          
         </div>
         <div style="background-color: #f9f9f9; padding: 20px; text-align: center;">
