@@ -13,6 +13,10 @@ const SHIPSTATION_API_URL = "https://ssapi.shipstation.com/orders/createorder";
 const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString("base64");
 
 export const createShipOrder = async (order) => {
+  console.log(
+    "------------------------------------------------- ship station -------------------------",
+    order
+  );
   order.cartItems.forEach((item) => {
     console.log(`Length: ${item.length}, Height: ${item.height}`);
   });
@@ -156,7 +160,7 @@ export const shipmentWebhook = async (req, res) => {
             );
 
             await ordersModel.findByIdAndUpdate(shipment.orderNumber, {
-              status: "completed",
+              status: "delivered",
             });
           } else {
             console.warn("Shipment missing orderNumber:", shipment);

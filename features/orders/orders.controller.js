@@ -13,6 +13,7 @@ dotenv.config({
 });
 
 const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY);
+// const STRIPE = new Stripe(process.env.TEST_SC);
 
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 // const STRIPE_ENDPOINT_SECRET =
@@ -308,6 +309,34 @@ const massDelete = async (req, res) => {
   }
 };
 
+export const createPaymentIntent = async (req, res) => {
+  try {
+    const paymentIntent = await STRIPE.paymentIntents.create({
+      currency: "EUR",
+      amount: 1999,
+      automatic_payment_methods: { enabled: true },
+    });
+
+    // Send publishable key and PaymentIntent details to client
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (e) {
+    return res.status(400).send({
+      error: {
+        message: e.message,
+      },
+    });
+  }
+};
+
+export const getConfig = (req, res) => {
+  res.send({
+    publishableKey: process.env.STRIPE_API_KEY,
+    // publishableKey: process.env.TEST_PB,
+  });
+};
+
 export default {
   createStripeCheckout,
   stripeWebhookHandler,
@@ -316,4 +345,6 @@ export default {
   deleteOrder,
   getAllOrdersDeleted,
   massDelete,
+  createPaymentIntent,
+  getConfig,
 };

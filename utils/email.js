@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  // Port 587 is the default port for SMTP, but TLS (Transport Layer Security) requires 465 or 587
   service: "gmail",
   port: 587,
   secure: false,
