@@ -75,7 +75,7 @@ const stripeWebhookHandler = async (req, res) => {
     await sendEmail(emailData);
 
     const admins =
-      "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
+      "lisawokor79@yahoo.com,eric.elewokor@gmail.com,ernestaryee11@gmail.com";
     const main = "eric.elewokor@gmail.com";
 
     await sendEmail(
@@ -243,13 +243,13 @@ export const updateOrderStatus = async (req, res) => {
       const totalItemsCost = updatedOrder.totalAmount;
       // Create checkout session
 
-      const admins =
-        "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
-      const main = "eric.elewokor@gmail.com";
+      // const admins =
+      //   "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
+      // const main = "eric.elewokor@gmail.com";
 
-      await sendEmail(
-        stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
-      );
+      // await sendEmail(
+      //   stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
+      // );
     }
 
     res.json(updatedOrder);

@@ -3,18 +3,23 @@ import Product from "./product.model.js";
 
 // Create a new product
 export const addProduct = async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.file);
+  console.log("Body:", req.body);
+  console.log("File:", req.file);
+
   try {
-    // Upload image to Cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: "products",
-    });
+    let imageUrl = null;
+
+    // If there's an image, upload it
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "products",
+      });
+      imageUrl = result.secure_url;
+    }
 
     // Extract product details
     const {
       title,
-
       length,
       width,
       height,
@@ -26,10 +31,9 @@ export const addProduct = async (req, res, next) => {
       cediPrice,
     } = req.body;
 
-    // Save product details along with the image URL
+    // Build product object
     const product = {
       title,
-
       length,
       width,
       height,
@@ -39,20 +43,21 @@ export const addProduct = async (req, res, next) => {
       dollarDiscount,
       dollarPrice,
       cediPrice,
-      image: result.secure_url, // URL from Cloudinary
+      image: imageUrl, // Could be null if no image uploaded
     };
 
-    // TODO: Save 'product' to your database
-    console.log("Product details:", product);
     const newProduct = await Product.create(product);
 
-    // Respond with success
-    res
-      .status(201)
-      .json({ message: "Product created successfully", newProduct });
+    res.status(201).json({
+      message: "Product created successfully",
+      newProduct,
+    });
   } catch (error) {
     console.error("Error creating product:", error);
-    res.status(500).json({ message: "Failed to create product", error });
+    res.status(500).json({
+      message: "Failed to create product",
+      error: error.message || error,
+    });
   }
 };
 
