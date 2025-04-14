@@ -2,6 +2,7 @@ import axios from "axios";
 import { Buffer } from "buffer";
 import dotenv from "dotenv";
 import ordersModel from "../orders/orders.model.js";
+import logger from "../../utils/logger.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const SHIPSTATION_API_URL = "https://ssapi.shipstation.com/orders/createorder";
 const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString("base64");
 
 export const createShipOrder = async (order) => {
+  logger.info("Order fired to ship station");
   console.log(
     "------------------------------------------------- ship station -------------------------",
     order
@@ -116,8 +118,10 @@ export const createShipOrder = async (order) => {
         "Content-Type": "application/json",
       },
     });
+    logger.info("Order moved successfully shipped to ship station");
     console.log("Order created successfully:", response.data);
   } catch (error) {
+    logger.error("Order failed  to be moved to ship station ");
     console.error(
       "Error creating order:",
       error.response ? error.response.data : error.message
@@ -129,6 +133,7 @@ export const createShipOrder = async (order) => {
 
 // Webhook endpoint
 export const shipmentWebhook = async (req, res) => {
+  logger.info("Ship station fired event back to app");
   console.log(req.body);
   try {
     const event = req.body;
@@ -137,6 +142,9 @@ export const shipmentWebhook = async (req, res) => {
     // Process the event if it's a SHIP_NOTIFY event
     if (event.resource_type === "SHIP_NOTIFY") {
       console.log(`Fetching shipment details from: ${event.resource_url}`);
+
+      // Logger monitor
+      logger.info("Order shipped from ship station to client successfully");
 
       try {
         const response = await axios.get(event.resource_url, {

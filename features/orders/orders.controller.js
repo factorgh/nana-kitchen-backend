@@ -7,6 +7,7 @@ import { processingCustomerStripe } from "../../utils/emailData/processing-statu
 import { notifyAdmins } from "../../utils/notfi-orders.js";
 import { createShipOrder } from "../ship/ship-api-handler.js";
 import ordersModel from "./orders.model.js";
+import logger from "../../utils/logger.js";
 
 dotenv.config({
   path: "./.env",
@@ -34,6 +35,9 @@ const stripeWebhookHandler = async (req, res) => {
   console.log("stripeWebhookHandler headers", req.headers);
   let event;
 
+  // Logger event
+  logger.info("Stripe webhook fired");
+
   try {
     const sig = req.headers["stripe-signature"];
     event = STRIPE.webhooks.constructEvent(
@@ -43,11 +47,14 @@ const stripeWebhookHandler = async (req, res) => {
     );
   } catch (error) {
     console.log(error);
+    logger.error("Stripe webhook error");
     return res.status(400).send(`Webhook error: ${error.message}`);
   }
 
   // Webhooks checker sesssion
-  console.log("web hookks runned");
+  console.log("web hooks runned");
+  logger.info("Received stripe chekcout completed event ");
+
   if (event.type === "checkout.session.completed") {
     const order = await ordersModel.findById(
       event.data.object.metadata?.orderId
@@ -61,6 +68,8 @@ const stripeWebhookHandler = async (req, res) => {
 
     // Send order to ship stattion
     await createShipOrder(order);
+
+    logger.info("Order moved to ship station");
 
     const shippingDetails =
       order.totalAmount - calculateTotalAmount(order.cartItems);
@@ -82,6 +91,8 @@ const stripeWebhookHandler = async (req, res) => {
       stripeAdmin(main, admins, order, totalItemsCost, shippingDetails)
     );
 
+    logger.info("email was sent successfully");
+
     await order.save();
   }
 
@@ -89,6 +100,7 @@ const stripeWebhookHandler = async (req, res) => {
 };
 
 const createStripeCheckout = async (req, res) => {
+  logger.info("Stripe checkout session fired");
   console.log(req.body); // Debug incoming request
   try {
     const { cartItems, userDetails, totalPrice } = req.body;
@@ -128,9 +140,11 @@ const createStripeCheckout = async (req, res) => {
         .json({ error: "Failed to create a checkout session." });
     }
     await newOrder.save();
+    logger.info("Stripe checkout session completed succesfully");
     res.status(200).json({ url: sessionData.url });
   } catch (error) {
     console.error("Error in createStripeCheckout:", error);
+    logger.error("Stripe checkout session failed");
     res.status(500).json({
       error: "Internal server error while creating checkout session.",
     });
@@ -243,13 +257,13 @@ export const updateOrderStatus = async (req, res) => {
       const totalItemsCost = updatedOrder.totalAmount;
       // Create checkout session
 
-      // const admins =
-      //   "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
-      // const main = "eric.elewokor@gmail.com";
+      const admins =
+        "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com";
+      const main = "eric.elewokor@gmail.com";
 
-      // await sendEmail(
-      //   stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
-      // );
+      await sendEmail(
+        stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
+      );
     }
 
     res.json(updatedOrder);

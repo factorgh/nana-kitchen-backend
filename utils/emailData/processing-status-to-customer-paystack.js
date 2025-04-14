@@ -68,7 +68,9 @@ export const processingCustomerPaystack = (
             <tfoot>
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Subtotal:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${subtotal}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${subtotal.toFixed(
+                  2
+                )}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Delivery:</td>
@@ -76,7 +78,9 @@ export const processingCustomerPaystack = (
               </tr>
               <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Total:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${totalItemsCost}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">GHC${totalItemsCost.toFixed(
+                  2
+                )}</td>
               </tr>
             </tfoot>
           </table>

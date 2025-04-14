@@ -4,6 +4,7 @@ import Paystack from "paystack";
 import { sendEmail } from "../../utils/email.js";
 import { processingStatusToAdmin } from "../../utils/emailData/processing-status-to-admin.js";
 import { processingCustomerPaystack } from "../../utils/emailData/processing-status-to-customer-paystack.js";
+import logger from "../../utils/logger.js";
 
 import { notifyAdmins } from "../../utils/notfi-orders.js";
 import ordersModel from "../orders/orders.model.js";
@@ -43,6 +44,9 @@ export const makePayment = async (req, res) => {
       name: ref,
     });
 
+    // Logger section
+    logger.info("Paystack checkout fired");
+
     console.log("Paystack initialization successful");
     console.log(response);
     // newOrder.ref = response.reference;
@@ -54,6 +58,7 @@ export const makePayment = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    logger.error("Paystack checkout failed");
     res.status(500).json({ error: "Payment request initialization failed" });
   }
 };
@@ -132,6 +137,8 @@ export const verifyPayment = async (req, res) => {
       processingStatusToAdmin(main, admins, order, totalItemsCost)
     );
 
+    logger.info("Email sent succesfully");
+
     // Step 7: Send success response
     res.status(200).json({
       message: "Payment successful",
@@ -144,6 +151,7 @@ export const verifyPayment = async (req, res) => {
 };
 // Paystack webhook
 export const createWebhook = async (req, res) => {
+  logger.info("Paystack webhook received successfully");
   try {
     // Parse Paystack webhook event
     const event = req.body;

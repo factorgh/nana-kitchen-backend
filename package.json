@@ -30,6 +30,7 @@
     "nodemon": "^3.1.7",
     "paystack": "^2.0.1",
     "stripe": "^17.4.0",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "winston": "^3.17.0"
   }
 }
