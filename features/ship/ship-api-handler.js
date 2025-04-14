@@ -129,8 +129,6 @@ export const createShipOrder = async (order) => {
   }
 };
 
-// ---------------------------------Ship station webhook hamdler
-
 // Webhook endpoint
 export const shipmentWebhook = async (req, res) => {
   logger.info("Ship station fired event back to app");
