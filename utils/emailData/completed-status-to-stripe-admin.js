@@ -6,7 +6,6 @@ export const stripeAdmin = (
   shippingDetails,
   totalItemsCost
 ) => {
-  console.log(shippingDetails);
   const subtotal = order.cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0

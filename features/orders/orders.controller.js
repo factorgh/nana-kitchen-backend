@@ -84,7 +84,7 @@ const stripeWebhookHandler = async (req, res) => {
     await sendEmail(emailData);
 
     const admins =
-      "lisawokor79@yahoo.com,eric.elewokor@gmail.com,ernestaryee11@gmail.com";
+      "lisawokor79@yahoo.com,eric.elewokor@gmail.com,ernestaryee11@gmail.com,abdulaziz021099@gmail.com";
     const main = "eric.elewokor@gmail.com";
 
     await sendEmail(
@@ -207,9 +207,6 @@ const createCheckoutSession = async (lineItems, orderId) => {
   }
 };
 
-// Get all orders
-// Ensure correct import
-
 export const getAllOrders = async (req, res) => {
   try {
     // Retrieve all non-deleted orders, sorted by createdAt in descending order
@@ -245,6 +242,7 @@ export const updateOrderStatus = async (req, res) => {
       { new: true }
     );
 
+    console.log(updatedOrder);
     if (!updatedOrder) {
       return res.status(404).json({ error: "Order not found." });
     }
