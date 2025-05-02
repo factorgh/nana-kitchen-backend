@@ -76,13 +76,15 @@ export const stripeAdmin = (
                   </tr>
                     <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Shipping:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${shippingDetails.toFixed()}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$ ${totalItemsCost.toFixed(
+                  2
+                )}</</td>
               </tr>
                <tr>
                 <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Total:</td>
-                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${totalItemsCost.toFixed(
-                  2
-                )}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$
+                ${shippingDetails.toFixed(2)}
+               td>
               </tr>
                   <tr>
                     <td style="padding: 10px; border: 1px solid #ddd; text-align: right;" colspan="2">Payment method:</td>
