@@ -16,7 +16,7 @@ export const stripeAdmin = (
     price: item.price,
     quantity: item.quantity,
   }));
-
+  console.log("working");
   const sliceOrderId = order._id.toString().slice(-6);
   return {
     to: client,
