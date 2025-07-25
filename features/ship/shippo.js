@@ -7,6 +7,7 @@ import { getDimensionsByQuantity } from './utils/ship-util.js';
 import {DistanceUnitEnum, WeightUnitEnum } from "shippo"
 
 import dotenv from 'dotenv';
+import ordersModel from '../orders/orders.model.js';
 dotenv.config();
 
  const shippo = new Shippo({apiKeyHeader: process.env.SHIPPO_API_KEY_TEST});
@@ -106,20 +107,33 @@ export const buyShippingLabel = async (req, res) => {
 
 
 
-
-
 export const generateLabelController = async (req, res) => {
   try {
     const {
       addressFrom,
       addressTo,
       parcel,
+      orderId
     } = req.body;
 
     // Validate required fields
     if (!addressFrom || !addressTo || !parcel) {
       return res.status(400).json({ message: "Missing required fields." });
     }
+    // Get orderDetails
+    const order = await ordersModel.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found." });
+    }
+    // Check if user already has a label and a tracking number then return label 
+    // If not the create a new label
+    if (order.labelUrl && order.trackingNumber) {
+      return res.status(200).json({
+        labelUrl: order.labelUrl,
+        trackingNumber: order.trackingNumber,
+      });
+    }
+    
 
     const shipment = await shippo.shipments.create({
       addressFrom:addressFrom,
@@ -148,8 +162,12 @@ export const generateLabelController = async (req, res) => {
       return res.status(500).json({ message: "Label generation failed.", transaction });
     }
 
+    // update order
+    await ordersModel.updateOne({ _id: orderId }, { labelUrl: transaction.labelUrl, trackingNumber: transaction.trackingNumber });
+
     return res.status(200).json({
-      transaction
+      labelUrl: transaction.labelUrl,
+      trackingNumber: transaction.trackingNumber,
     });
   } catch (error) {
     console.error("Label generation error:", error);

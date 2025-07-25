@@ -40,6 +40,9 @@ const orderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  // shipping details
+  labelUrl: { type: String },
+  trackingNumber: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
