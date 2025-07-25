@@ -7,8 +7,9 @@ import paystackRoute from "./features/paystack/paystack.route.js";
 import productRoute from "./features/products/product.route.js";
 import reviewRoute from "./features/Reviews/review.route.js";
 import notiRouter from "./utils/notification.js";
-
-// Env setup
+import shippoRoute from "./features/ship/shippo.route.js";
+import easyRoute from "./features/ship/easy/easy.route.js";
+  // Env setup
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -62,12 +63,12 @@ app.use("/api/v1/orders", orderRoute);
 app.use("/api/v1/products", productRoute);
 app.use("/api/v1/noti", notiRouter);
 app.use("/api/v1/reviews", reviewRoute);
-
+app.use("/api/v1/shippo", shippoRoute);
+app.use("/api/v1/easy", easyRoute);
 // PAYSTACK
 app.use("/api/v1/paystack", paystackRoute);
 
-const port = 8000;
-
+const port = 9000
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
