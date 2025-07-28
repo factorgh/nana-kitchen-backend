@@ -170,6 +170,7 @@ export const generateLabelController = async (req, res) => {
       trackingNumber: transaction.trackingNumber,
     });
   } catch (error) {
+    console.log(error)
     console.error("Label generation error:", error);
     return res.status(500).json({ message: "Internal Server Error", error });
   }

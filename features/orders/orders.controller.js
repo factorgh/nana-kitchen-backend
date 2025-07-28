@@ -253,15 +253,18 @@ export const updateOrderStatus = async (req, res) => {
         updatedOrder.totalAmount - calculateTotalAmount(updatedOrder.cartItems);
 
       const totalItemsCost = updatedOrder.totalAmount;
+      console.log("---------------------------Order Details sent --------------------");
+      console.log(updatedOrder);
+      
       // Create checkout session
 
-      const admins =
-        "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com,nunanaashong@gmail.com";
-      const main = "eric.elewokor@gmail.com";
+      // const admins =
+      //   "lisawokor79@yahoo.comeric.elewokor@gmail.com,ernestaryee11@gmail.com,nunanaashong@gmail.com";
+      // const main = "eric.elewokor@gmail.com";
 
-      await sendEmail(
-        stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
-      );
+      // await sendEmail(
+      //   stripeAdmin(main, admins, updatedOrder, totalItemsCost, shippingDetails)
+      // );
     }
 
     res.json(updatedOrder);
