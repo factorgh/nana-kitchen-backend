@@ -17,8 +17,7 @@ const STRIPE = new Stripe(process.env.STRIPE_SECRET_KEY);
 // const STRIPE = new Stripe(process.env.TEST_SC);
 
 const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-// const STRIPE_ENDPOINT_SECRET =
-//   "whsec_2659890a063d46e3d08b474fddc6c89960e65a4bac35879befb917565bd307ec";
+
 
 const URL = process.env.FRONTEND_URL || "http://localhost:5173";
 // https://nanas-kitchen.vercel.app/
