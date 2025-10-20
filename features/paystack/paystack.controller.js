@@ -124,7 +124,7 @@ export const verifyPayment = async (req, res) => {
     await sendEmail(customerEmailData);
 
     const admins =
-      "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com";
+      "ernest@adroit360.com,mightysuccess55@gmail.com,burchellsbale@gmail.com,nunanaashong@gmail.com";
     const main = "eric.elewokor@gmail.com";
 
     // const main = "abdulaziz021099@gmail.com";

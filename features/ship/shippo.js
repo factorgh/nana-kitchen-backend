@@ -142,6 +142,7 @@ export const generateLabelController = async (req, res) => {
       async: false,
     });
 
+    console.log("Shipment feedback", shipment);
     if (!shipment || !shipment.objectId) {
       return res.status(500).json({ message: "Failed to create shipment." });
     }
@@ -153,9 +154,9 @@ export const generateLabelController = async (req, res) => {
     const transaction = await shippo.transactions.create({
       shipment: shipment,
       servicelevelToken:"usps_ground_advantage",
-      carrierAccount:"8d93263e7d774b93aa59b372726172a4",
-      // label_file_type: "PDF", // or PNG
-      // async: false,
+      carrierAccount:"9efc1fbbd0f443939899385fca104994",
+      label_file_type: "PDF", // or PNG
+      async: false,
     });
 
     if (transaction.status !== "SUCCESS") {
