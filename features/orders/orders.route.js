@@ -5,6 +5,7 @@ import orders from "./orders.controller.js";
 const router = express.Router();
 
 router.get("/", orders.getAllOrders);
+router.get("/completed-delivered", orders.getCompletedAndDeliveredOrders);
 router.get("/config", orders.getConfig);
 router.get("/trash", orders.getAllOrdersDeleted);
 

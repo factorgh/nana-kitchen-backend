@@ -151,6 +151,24 @@ const createStripeCheckout = async (req, res) => {
   }
 };
 
+export const getCompletedAndDeliveredOrders = async (req, res) => {
+  try {
+    const orders = await ordersModel
+      .find({
+        $and: [
+          { $or: [{ deletedMode: false }, { deletedMode: { $exists: false } }] },
+          { status: { $in: ["completed", "delivered", "Completed", "Delivered"] } },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    console.error("Error in getCompletedAndDeliveredOrders:", error);
+    res.status(500).json({ success: false, error: "Failed to retrieve orders." });
+  }
+};
+
 // Create line items
 const createLineItems = (cartItems, shipmentCost) => {
   try {
@@ -353,6 +371,7 @@ export default {
   createStripeCheckout,
   stripeWebhookHandler,
   getAllOrders,
+  getCompletedAndDeliveredOrders,
   updateOrderStatus,
   deleteOrder,
   getAllOrdersDeleted,
